@@ -69,6 +69,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 @Override
                 public void onComplete(@NotNull SVGAVideoEntity videoItem) {
                     SVGADrawable drawable = new SVGADrawable(videoItem, new SVGADynamicEntity());
+                    svg.setLoops(1);                //只播放一次，不循环
+                    svg.setClearsAfterStop(true);   //播放停止后清除
                     svg.setImageDrawable(drawable);
                     svg.startAnimation();
                 }
@@ -96,6 +98,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 @Override
                 public void onComplete(@NotNull SVGAVideoEntity videoItem) {
                     SVGADrawable drawable = new SVGADrawable(videoItem, new SVGADynamicEntity());
+                    svg.setLoops(1);                //只播放一次，不循环
+                    svg.setClearsAfterStop(true);   //播放停止后清除
                     svg.setImageDrawable(drawable);
                     svg.startAnimation();
                 }
