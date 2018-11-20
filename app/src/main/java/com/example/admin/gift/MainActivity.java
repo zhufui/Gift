@@ -13,6 +13,8 @@ import com.opensource.svgaplayer.SVGAVideoEntity;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -49,6 +51,33 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.bt1:
                 setNetWorkSource();
                 break;
+        }
+    }
+
+    /**
+     * @param filePath sd卡上的文件路径
+     */
+    private void setSdResource(String filePath) {
+        try {
+            svg.clearAnimation();
+            SVGAParser parser = new SVGAParser(this);
+            parser.parse(new FileInputStream(filePath), "key", new SVGAParser.ParseCompletion() {
+                @Override
+                public void onComplete(@NotNull SVGAVideoEntity videoItem) {
+                    SVGADrawable drawable = new SVGADrawable(videoItem, new SVGADynamicEntity());
+                    svg.setLoops(1);                //只播放一次，不循环
+                    svg.setClearsAfterStop(true);   //播放停止后清除
+                    svg.setImageDrawable(drawable);
+                    svg.startAnimation();
+                }
+
+                @Override
+                public void onError() {
+
+                }
+            }, true);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         }
     }
 
