@@ -2,9 +2,11 @@ package com.example.admin.gift;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.opensource.svgaplayer.SVGACallback;
 import com.opensource.svgaplayer.SVGADrawable;
 import com.opensource.svgaplayer.SVGADynamicEntity;
 import com.opensource.svgaplayer.SVGAImageView;
@@ -26,6 +28,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+    public static final String TAG = "svg_tag";
     Button bt;
     Button bt1;
     SVGAImageView svg;
@@ -46,7 +49,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.bt:
-                setLocalResource();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        setLocalResource();
+                    }
+                }).start();
                 break;
             case R.id.bt1:
                 setNetWorkSource();
@@ -81,6 +89,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    SVGAParser parser = new SVGAParser(this);
     /**
      * 设置本地资源
      */
@@ -93,7 +102,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             } else {
                 name = "good.svga";
             }
-            SVGAParser parser = new SVGAParser(this);
             parser.parse(name, new SVGAParser.ParseCompletion() {
                 @Override
                 public void onComplete(@NotNull SVGAVideoEntity videoItem) {
@@ -101,6 +109,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     svg.setLoops(1);                //只播放一次，不循环
                     svg.setClearsAfterStop(true);   //播放停止后清除
                     svg.setImageDrawable(drawable);
+                    svg.setCallback(new SVGACallback() {
+                        @Override
+                        public void onPause() {
+                            Log.d(TAG, "onPause");
+                        }
+
+                        @Override
+                        public void onFinished() {
+                            Log.d(TAG, "onFinished");
+                        }
+
+                        @Override
+                        public void onRepeat() {
+                            Log.d(TAG, "onRepeat");
+                        }
+
+                        @Override
+                        public void onStep(int i, double v) {
+                            Log.d(TAG, "onStep, i = " + i + ", v = " + v);
+                        }
+                    });
                     svg.startAnimation();
                 }
 
@@ -130,6 +159,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     svg.setLoops(1);                //只播放一次，不循环
                     svg.setClearsAfterStop(true);   //播放停止后清除
                     svg.setImageDrawable(drawable);
+                    svg.setCallback(new SVGACallback() {
+                        @Override
+                        public void onPause() {
+                            Log.d(TAG, "url onPause");
+                        }
+
+                        @Override
+                        public void onFinished() {
+                            Log.d(TAG, "url onFinished");
+                        }
+
+                        @Override
+                        public void onRepeat() {
+                            Log.d(TAG, "url onRepeat");
+                        }
+
+                        @Override
+                        public void onStep(int i, double v) {
+                            Log.d(TAG, "url onStep, i = " + i + ", v = " + v);
+                        }
+                    });
                     svg.startAnimation();
                 }
 
